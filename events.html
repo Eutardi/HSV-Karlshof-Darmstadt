@@ -110,7 +110,7 @@
       ];
 
       // Helpers
-      const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]; // left-align with screenshot vibe
+      const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Monday first
       function toDate(d){ const [y,m,day]=d.split("-").map(Number); return new Date(y,m-1,day);} 
       function formatDateLong(iso){ const d=toDate(iso); return d.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
       function yyyymmdd(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,"0"); const day=String(d.getDate()).padStart(2,"0"); return `${y}-${m}-${day}`; }
@@ -154,37 +154,67 @@
         const eventsByDate = useEventsByDate();
         const first = new Date(month.getFullYear(), month.getMonth(), 1);
         const last = new Date(month.getFullYear(), month.getMonth()+1, 0);
-        const startPad = first.getDay();
+        // Monday-first padding
+        const startPad = (first.getDay() + 6) % 7; // 0=Mon, 6=Sun
         const totalDays = last.getDate();
-        const days=[]; for(let i=0;i<startPad;i++) days.push(null); for(let d=1; d<=totalDays; d++) days.push(new Date(month.getFullYear(), month.getMonth(), d)); while(days.length%7!==0) days.push(null);
+
+        // build a flat array of days for the month view (with leading/trailing nulls)
+        const days = [];
+        for (let i = 0; i < startPad; i++) days.push(null);
+        for (let d = 1; d <= totalDays; d++) days.push(new Date(month.getFullYear(), month.getMonth(), d));
+        while (days.length % 7 !== 0) days.push(null);
+
+        // split into weeks and mark whether each week has any events
+        const weeks = [];
+        for (let i = 0; i < days.length; i += 7) {
+          const week = days.slice(i, i + 7);
+          const hasEvent = week.some((d) => d && (eventsByDate[yyyymmdd(d)] || []).length > 0);
+          weeks.push({ week, hasEvent });
+        }
 
         return (
           <div>
+            {/* Weekday header with horizontal scroll guard on tiny screens */}
             <div className="overflow-x-auto">
               <div className="grid grid-cols-7 text-[11px] xs:text-xs font-medium text-gray-500 mb-2 min-w-[700px]">
-                {WEEKDAYS.map((w)=> <div key={w} className="px-2 py-2 text-center" aria-hidden>{w}</div>)}
+                {WEEKDAYS.map((w) => (
+                  <div key={w} className="px-2 py-2 text-center" aria-hidden>
+                    {w}
+                  </div>
+                ))}
               </div>
             </div>
 
+            {/* Weeks rows: short rows if no events in the entire week */}
             <div className="overflow-x-auto">
-              <div className="grid grid-cols-7 gap-2 sm:gap-3 min-w-[700px]">
-                {days.map((d,i)=>{
-                  if(!d) return <div key={i} className="h-32 sm:h-40 rounded-2xl"></div>;
-                  const key=yyyymmdd(d); const list=eventsByDate[key]||[]; const e=list[0];
-                  const isToday = key === yyyymmdd(new Date());
-                  return (
-                    <div key={i} className={`h-32 sm:h-48 rounded-2xl bg-white ring-1 ring-gray-200 p-2 sm:p-3 flex flex-col overflow-hidden min-h-0 focus-within:ring-2 ${isToday?'ring-2 ring-black':''}`}>
-                      <div className="text-xs font-semibold text-gray-700 mb-1">{String(d.getDate()).padStart(2,'0')}</div>
-                      {e ? (
-                        <button type="button" className="flex-1 text-left w-full h-full overflow-hidden" onClick={()=>onSelect(e)}>
-                          <EventCard e={e} />
-                        </button>
-                      ) : (
-                        <div className="text-sm text-gray-300">No events</div>
-                      )}
-                    </div>
-                  );
-                })}
+              <div className="min-w-[700px] space-y-2 sm:space-y-3">
+                {weeks.map(({ week, hasEvent }, wi) => (
+                  <div key={wi} className="grid grid-cols-7 gap-2 sm:gap-3">
+                    {week.map((d, i) => {
+                      const cellH = hasEvent ? 'h-32 sm:h-48' : 'h-20 sm:h-24';
+                      if (!d) return <div key={i} className={`${cellH} rounded-2xl`}></div>;
+                      const key = yyyymmdd(d);
+                      const list = eventsByDate[key] || [];
+                      const e = list[0];
+                      const isToday = key === yyyymmdd(new Date());
+                      return (
+                        <div
+                          key={i}
+                          className={`${cellH} rounded-2xl bg-white ring-1 ring-gray-200 p-2 sm:p-3 flex flex-col overflow-hidden min-h-0 focus-within:ring-2 ${isToday ? 'ring-2 ring-black' : ''}`}
+                        >
+                          <div className="text-xs font-semibold text-gray-700 mb-1">{String(d.getDate()).padStart(2,'0')}</div>
+                          {e ? (
+                            <button type="button" className="flex-1 text-left w-full h-full overflow-hidden" onClick={() => onSelect(e)}>
+                              <EventCard e={e} />
+                            </button>
+                          ) : (
+                            <div className="text-sm text-gray-300">No events</div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -266,5 +296,6 @@
     </script>
   </body>
 </html>
+
 
 
