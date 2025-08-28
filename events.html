@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-  Massively by HTML5 UP
-  html5up.net | @ajlkn
-  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
   <head>
     <title>HSV_Darmstadt – Events</title>
@@ -12,7 +7,7 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
-    <!-- Tailwind CSS (preflight disabled so it doesn't override HTML5UP base styles) -->
+    <!-- Tailwind (preflight disabled so it won't override HTML5UP base styles) -->
     <script>
       window.tailwind = {
         config: {
@@ -27,18 +22,14 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 
-    <!-- Babel to allow JSX in a script tag -->
+    <!-- Babel for in-page JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
       @media (max-width: 480px) { body { font-size: 17px; } }
       @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
-      /* 2-line truncation utility (since Tailwind CDN doesn't include the line-clamp plugin) */
       .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
       }
     </style>
   </head>
@@ -105,12 +96,12 @@
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- React app -->
+    <!-- React App -->
     <script type="text/babel">
       const { useState, useMemo, useEffect } = React;
       const { createPortal } = ReactDOM;
 
-      // EDIT THIS: your events data
+      // Data
       const events = [
         {
           id: "e1",
@@ -120,22 +111,22 @@
           end: "20:00",
           location: "Am Karlshof",
           description:
-            "A summer food exchange at Karlshof: residents share their favorite national dishes and cook for one another in a relaxed, community-style gathering."
+            "A summer food exchange at Karlshof: residents share national dishes and cook for one another."
         }
       ];
 
       // Helpers
-      const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Monday first
-      function toDate(d){ const [y,m,day]=d.split("-").map(Number); return new Date(y,m-1,day);} 
-      function formatDateLong(iso){ const d=toDate(iso); return d.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
-      function yyyymmdd(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,"0"); const day=String(d.getDate()).padStart(2,"0"); return `${y}-${m}-${day}`; }
-      function monthLabel(d){ return d.toLocaleDateString(undefined,{month:"long",year:"numeric"}); }
-      function addMonths(d,delta){ const nd=new Date(d); nd.setMonth(nd.getMonth()+delta); return nd; }
+      const WEEKDAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      const toDate = (d)=>{ const [y,m,day]=d.split("-").map(Number); return new Date(y,m-1,day); };
+      const formatDateLong = (iso)=> toDate(iso).toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+      const yyyymmdd = (d)=> `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      const monthLabel = (d)=> d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+      const addMonths = (d,delta)=>{ const nd=new Date(d); nd.setMonth(nd.getMonth()+delta); return nd; };
 
       function useEventsByDate(){
         return useMemo(()=>{
           const map={};
-          for(const e of events){ if(!map[e.date]) map[e.date]=[]; map[e.date].push(e); }
+          for(const e of events){ (map[e.date] ||= []).push(e); }
           for(const k of Object.keys(map)){ map[k].sort((a,b)=>(a.start+a.title).localeCompare(b.start+b.title)); }
           return map;
         },[]);
@@ -144,7 +135,7 @@
       function EventCard({ e }) {
         return (
           <div className="w-full h-full rounded-lg ring-1 ring-green-300 bg-green-100 p-3 leading-snug overflow-hidden break-words whitespace-normal">
-            <!-- Smaller on desktop; scales up a bit on larger screens if needed -->
+            {/* Smaller on desktop; adjusts at larger breakpoints */}
             <div className="font-semibold text-xs sm:text-sm md:text-sm lg:text-base leading-snug">
               {e.title}
             </div>
@@ -157,7 +148,9 @@
           <div className="flex items-start justify-between gap-3 bg-white rounded-xl p-4 sm:p-5 ring-1 ring-gray-200">
             <div>
               <h3 className="text-base sm:text-lg font-semibold leading-tight">{e.title}</h3>
-              <p className="text-sm text-gray-600 mt-0.5">{formatDateLong(e.date)} • {e.start}{e.end?`–${e.end}`:''}</p>
+              <p className="text-sm text-gray-600 mt-0.5">
+                {formatDateLong(e.date)} • {e.start}{e.end?`–${e.end}`:''}
+              </p>
               {e.location && <p className="text-sm text-gray-600">📍 {e.location}</p>}
               {e.description && <p className="text-sm text-gray-700 mt-2">{e.description}</p>}
             </div>
@@ -169,57 +162,44 @@
         const eventsByDate = useEventsByDate();
         const first = new Date(month.getFullYear(), month.getMonth(), 1);
         const last = new Date(month.getFullYear(), month.getMonth()+1, 0);
-        // Monday-first padding
-        const startPad = (first.getDay() + 6) % 7; // 0=Mon, 6=Sun
+        const startPad = (first.getDay() + 6) % 7; // Monday-first
         const totalDays = last.getDate();
 
-        // build a flat array of days for the month view (with leading/trailing nulls)
-        const days = [];
-        for (let i = 0; i < startPad; i++) days.push(null);
-        for (let d = 1; d <= totalDays; d++) days.push(new Date(month.getFullYear(), month.getMonth(), d));
-        while (days.length % 7 !== 0) days.push(null);
+        const days=[]; for(let i=0;i<startPad;i++) days.push(null);
+        for(let d=1; d<=totalDays; d++) days.push(new Date(month.getFullYear(), month.getMonth(), d));
+        while(days.length%7!==0) days.push(null);
 
-        // split into weeks and mark whether each week has any events
-        const weeks = [];
-        for (let i = 0; i < days.length; i += 7) {
-          const week = days.slice(i, i + 7);
-          const hasEvent = week.some((d) => d && (eventsByDate[yyyymmdd(d)] || []).length > 0);
-          weeks.push({ week, hasEvent });
+        const weeks=[];
+        for(let i=0;i<days.length;i+=7){
+          const week = days.slice(i,i+7);
+          const hasEvent = week.some(d => d && (eventsByDate[yyyymmdd(d)]||[]).length>0);
+          weeks.push({week, hasEvent});
         }
 
         return (
           <div>
-            {/* Weekday header with horizontal scroll guard on tiny screens */}
             <div className="overflow-x-auto">
               <div className="grid grid-cols-7 text-[11px] xs:text-xs font-medium text-gray-500 mb-2 min-w-[700px]">
-                {WEEKDAYS.map((w) => (
-                  <div key={w} className="px-2 py-2 text-center" aria-hidden>
-                    {w}
-                  </div>
-                ))}
+                {WEEKDAYS.map(w => <div key={w} className="px-2 py-2 text-center" aria-hidden>{w}</div>)}
               </div>
             </div>
 
-            {/* Weeks rows: short rows if no events in the entire week */}
             <div className="overflow-x-auto">
               <div className="min-w-[700px] space-y-2 sm:space-y-3">
-                {weeks.map(({ week, hasEvent }, wi) => (
+                {weeks.map(({week, hasEvent}, wi) => (
                   <div key={wi} className="grid grid-cols-7 gap-2 sm:gap-3">
                     {week.map((d, i) => {
                       const cellH = hasEvent ? 'h-32 sm:h-48' : 'h-20 sm:h-24';
                       if (!d) return <div key={i} className={`${cellH} rounded-2xl`}></div>;
                       const key = yyyymmdd(d);
-                      const list = eventsByDate[key] || [];
-                      const e = list[0];
+                      const e = (eventsByDate[key]||[])[0];
                       const isToday = key === yyyymmdd(new Date());
                       return (
-                        <div
-                          key={i}
-                          className={`${cellH} rounded-2xl bg-white ring-1 ring-gray-200 p-2 sm:p-3 flex flex-col overflow-hidden min-h-0 focus-within:ring-2 ${isToday ? 'ring-2 ring-black' : ''}`}
-                        >
+                        <div key={i}
+                          className={`${cellH} rounded-2xl bg-white ring-1 ring-gray-200 p-2 sm:p-3 flex flex-col overflow-hidden min-h-0 focus-within:ring-2 ${isToday?'ring-2 ring-black':''}`}>
                           <div className="text-xs font-semibold text-gray-700 mb-1">{String(d.getDate()).padStart(2,'0')}</div>
                           {e ? (
-                            <button type="button" className="flex-1 text-left w-full h-full overflow-hidden" onClick={() => onSelect(e)}>
+                            <button type="button" className="flex-1 text-left w-full h-full overflow-hidden" onClick={()=>onSelect(e)}>
                               <EventCard e={e} />
                             </button>
                           ) : (
@@ -236,30 +216,16 @@
         );
       }
 
-      function Modal({ open, onClose, children, title }) {
-        if (!open) return null;
-
-        // Renders above everything (outside #wrapper) to avoid being covered by footer/forms
+      function Modal({ open, onClose, children, title }){
+        if(!open) return null;
         return createPortal(
           <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center">
-            <div
-              className="absolute inset-0 bg-black/40"
-              onClick={onClose}
-              aria-hidden
-            ></div>
-            <div
-              role="dialog"
-              aria-modal="true"
-              className="relative w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl 
-                         p-5 ring-1 ring-gray-200 m-0 sm:m-4 text-base sm:text-lg leading-relaxed"
-            >
+            <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden></div>
+            <div role="dialog" aria-modal="true"
+                 className="relative w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl p-5 ring-1 ring-gray-200 m-0 sm:m-4">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <h4 className="text-lg sm:text-xl font-semibold">{title}</h4>
-                <button
-                  className="px-3 py-1 text-sm rounded-lg ring-1 ring-gray-200"
-                  onClick={onClose}
-                  aria-label="Close"
-                >
+                <button className="px-3 py-1 text-sm rounded-lg ring-1 ring-gray-200" onClick={onClose} aria-label="Close">
                   Close
                 </button>
               </div>
@@ -272,10 +238,15 @@
 
       function EventsSection(){
         const [view,setView]=useState('calendar');
-        const [month,setMonth]=useState(()=>{ const today=new Date(); today.setDate(1); today.setHours(0,0,0,0); return today; });
+        const [month,setMonth]=useState(()=>{ const t=new Date(); t.setDate(1); t.setHours(0,0,0,0); return t; });
         const sorted = useMemo(()=>[...events].sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)),[]);
         const [selected,setSelected]=useState(null);
-        useEffect(()=>{ const mq=window.matchMedia('(max-width: 420px)'); const apply=()=>setView(v=>mq.matches?'list':v); apply(); mq.addEventListener('change',apply); return ()=>mq.removeEventListener('change',apply); },[]);
+        useEffect(()=>{
+          const mq=window.matchMedia('(max-width: 420px)');
+          const apply=()=>setView(v=>mq.matches?'list':v);
+          apply(); mq.addEventListener('change',apply);
+          return ()=>mq.removeEventListener('change',apply);
+        },[]);
 
         return (
           <div className="w-full px-2 sm:px-0">
@@ -322,12 +293,10 @@
         );
       }
 
-      const root = ReactDOM.createRoot(document.getElementById('events-root'));
-      root.render(<EventsSection />);
+      ReactDOM.createRoot(document.getElementById('events-root')).render(<EventsSection />);
     </script>
   </body>
 </html>
-
 
 
 
