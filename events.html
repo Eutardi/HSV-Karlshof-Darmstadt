@@ -1,11 +1,4 @@
 
-
-<!DOCTYPE HTML>
-<!--
-  Massively by HTML5 UP
-  html5up.net | @ajlkn
-  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <!DOCTYPE HTML>
 <!--
   Massively by HTML5 UP
@@ -24,7 +17,7 @@
     <script>
       window.tailwind = { config: {
         corePlugins: { preflight: false },
-        theme: { extend: { screens: { xs: '380px' } } }
+        theme: { extend: { screens: { xs: '420px' } } }
       }};
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,13 +30,9 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-      /* Small utility tweaks that play nicely with HTML5UP base */
       @media (max-width: 480px) {
-        /* Make default fonts a hair larger for readability */
         body { font-size: 17px; }
       }
-
-      /* Reduce motion for users that prefer it */
       @media (prefers-reduced-motion: reduce) {
         * { scroll-behavior: auto !important; }
       }
@@ -216,11 +205,12 @@
         }, []);
       }
 
-      // UI bits
       function EventPill({ e }) {
+        // Full-width, larger text to occupy the cell; single-event-per-day optimized
         return (
-          <div className="text-[11px] xs:text-xs rounded-md px-2 py-1 ring-1 ring-gray-200 bg-gray-50 truncate" title={`${e.start} · ${e.title}`}>
-            <span className="font-medium">{e.start}</span> · {e.title}
+          <div className="w-full rounded-lg px-2 py-3 ring-1 ring-gray-200 bg-gray-50 text-sm sm:text-base leading-snug break-words">
+            <div className="font-semibold">{e.title}</div>
+            <div className="text-gray-600 mt-0.5">{e.start}{e.end ? `–${e.end}` : ''}{e.location ? ` • ${e.location}` : ''}</div>
           </div>
         );
       }
@@ -240,7 +230,7 @@
         );
       }
 
-      function Calendar({ month }) {
+      function Calendar({ month, onSelectEvent }) {
         const eventsByDate = useEventsByDate();
 
         const first = new Date(month.getFullYear(), month.getMonth(), 1);
@@ -257,7 +247,7 @@
           <div>
             {/* Weekday header with horizontal scroll guard on tiny screens */}
             <div className="overflow-x-auto">
-              <div className="grid grid-cols-7 text-[11px] xs:text-xs font-medium text-gray-500 mb-2 min-w-[560px]">
+              <div className="grid grid-cols-7 text-[11px] xs:text-xs font-medium text-gray-500 mb-2 min-w-[700px]">
                 {WEEKDAYS.map((w) => (
                   <div key={w} className="px-2 py-2 text-center" aria-hidden>
                     {w}
@@ -268,37 +258,55 @@
 
             {/* Calendar grid: allow horizontal scroll on very small screens */}
             <div className="overflow-x-auto">
-              <div className="grid grid-cols-7 gap-1.5 sm:gap-2 min-w-[560px]">
+              <div className="grid grid-cols-7 gap-2 sm:gap-3 min-w-[700px]">
                 {days.map((d, i) => {
-                  if (!d) return <div key={i} className="h-20 sm:h-28 rounded-xl bg-transparent"></div>;
+                  if (!d) return <div key={i} className="h-28 sm:h-40 rounded-2xl bg-transparent"></div>;
                   const key = yyyymmdd(d);
                   const dayEvents = eventsByDate[key] || [];
                   const isToday = key === yyyymmdd(new Date());
+                  const event = dayEvents[0];
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={i}
-                      className={`h-24 xs:h-28 sm:h-32 rounded-xl bg-white ring-1 ring-gray-200 p-2 flex flex-col gap-1 focus-within:ring-2 focus-within:ring-black ${isToday ? "ring-2 ring-black" : ""}`}
-                      tabIndex={0}
-                      aria-label={`${d.toDateString()} ${dayEvents.length ? `${dayEvents.length} events` : 'no events'}`}
+                      className={`text-left h-32 xs:h-40 sm:h-48 rounded-2xl bg-white ring-1 ring-gray-200 p-3 flex flex-col gap-2 focus:outline-none focus:ring-2 focus:ring-black transition-shadow ${isToday ? "ring-2 ring-black" : ""}`}
+                      onClick={() => event && onSelectEvent(event)}
+                      aria-label={`${d.toDateString()} ${event ? `${event.title} ${event.start}${event.end ? `–${event.end}` : ''}` : 'no events'}`}
                     >
                       <div className="text-sm font-semibold flex items-center justify-between">
                         <span>{d.getDate()}</span>
                         {isToday && <span className="sr-only">Today</span>}
                       </div>
-                      <div className="flex flex-col gap-1 overflow-hidden">
-                        {dayEvents.length ? (
-                          dayEvents.slice(0, 3).map((e) => <EventPill key={e.id} e={e} />)
+                      <div className="flex-1 flex items-center">
+                        {event ? (
+                          <EventPill e={event} />
                         ) : (
-                          <span className="text-[11px] text-gray-400">—</span>
-                        )}
-                        {dayEvents.length > 3 && (
-                          <span className="text-[11px] text-gray-500">+{dayEvents.length - 3} more</span>
+                          <span className="text-sm text-gray-300">No events</span>
                         )}
                       </div>
-                    </div>
+                      {dayEvents.length > 1 && (
+                        <div className="text-xs text-gray-500">+{dayEvents.length - 1} more</div>
+                      )}
+                    </button>
                   );
                 })}
               </div>
+            </div>
+          </div>
+        );
+      }
+
+      function Modal({ open, onClose, children, title }) {
+        if (!open) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+            <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden></div>
+            <div role="dialog" aria-modal="true" className="relative w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl p-5 ring-1 ring-gray-200 m-0 sm:m-4">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h4 className="text-lg font-semibold">{title}</h4>
+                <button className="px-3 py-1 text-sm rounded-lg ring-1 ring-gray-200" onClick={onClose} aria-label="Close">Close</button>
+              </div>
+              {children}
             </div>
           </div>
         );
@@ -316,6 +324,8 @@
         const sorted = useMemo(() => {
           return [...events].sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
         }, []);
+
+        const [selected, setSelected] = useState(null);
 
         // Switch to list view automatically on very small screens for usability
         useEffect(() => {
@@ -386,7 +396,7 @@
                     </div>
                     <h3 className="text-base sm:text-lg font-semibold text-center xs:text-right">{monthLabel(month)}</h3>
                   </div>
-                  <Calendar month={month} />
+                  <Calendar month={month} onSelectEvent={setSelected} />
                 </section>
               ) : (
                 <section className="space-y-3">
@@ -395,6 +405,21 @@
                   ))}
                 </section>
               )}
+
+              <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.title}>
+                {selected && (
+                  <div className="text-sm space-y-2">
+                    <p className="text-gray-700"><strong>Date:</strong> {formatDateLong(selected.date)}</p>
+                    <p className="text-gray-700"><strong>Time:</strong> {selected.start}{selected.end ? `–${selected.end}` : ''}</p>
+                    {selected.location && (
+                      <p className="text-gray-700"><strong>Location:</strong> {selected.location}</p>
+                    )}
+                    {selected.description && (
+                      <p className="text-gray-700"><strong>About:</strong> {selected.description}</p>
+                    )}
+                  </div>
+                )}
+              </Modal>
 
               <div className="mt-6 sm:mt-8 text-xs text-gray-500">
                 ✍️ To add events, edit the <code>events</code> array in this file (YYYY-MM-DD dates, 24h times).
@@ -409,4 +434,3 @@
     </script>
   </body>
 </html>
-
