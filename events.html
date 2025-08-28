@@ -1,10 +1,4 @@
-
 <!DOCTYPE HTML>
-<!--
-  Massively by HTML5 UP
-  html5up.net | @ajlkn
-  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
   <head>
     <title>HSV_Darmstadt – Events</title>
@@ -13,11 +7,11 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
-    <!-- Tailwind CSS (preflight disabled so it doesn't override HTML5UP base styles) -->
+    <!-- Tailwind CSS -->
     <script>
       window.tailwind = { config: {
         corePlugins: { preflight: false },
-        theme: { extend: { screens: { xs: '420px' } } }
+        theme: { extend: { screens: { xs: '380px' } } }
       }};
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,171 +20,68 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 
-    <!-- Babel to allow JSX in a script tag -->
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <style>
-      @media (max-width: 480px) {
-        body { font-size: 17px; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        * { scroll-behavior: auto !important; }
-      }
-    </style>
   </head>
   <body class="is-preload">
-
-    <!-- Wrapper -->
     <div id="wrapper">
-
-      <!-- Header -->
       <header id="header" class="px-3">
         <a href="index.html" class="logo">Archive</a>
       </header>
 
-      <!-- Nav -->
       <nav id="nav" class="px-3">
         <ul class="links flex flex-wrap gap-2">
           <li><a href="index.html">Archive</a></li>
           <li class="active"><a href="events.html" aria-current="page">Events</a></li>
         </ul>
-        <ul class="icons">
-          <li><a href="#" class="icon brands fa-twitter" aria-label="Twitter"><span class="label">Twitter</span></a></li>
-          <li><a href="#" class="icon brands fa-facebook-f" aria-label="Facebook"><span class="label">Facebook</span></a></li>
-          <li><a href="#" class="icon brands fa-instagram" aria-label="Instagram"><span class="label">Instagram</span></a></li>
-          <li><a href="#" class="icon brands fa-github" aria-label="GitHub"><span class="label">GitHub</span></a></li>
-        </ul>
       </nav>
 
-      <!-- Main -->
       <div id="main">
-
-        <!-- Post -->
         <section class="post">
           <header class="major">
-            <h1 class="leading-tight">Events</h1>
-            <p>See what we offer by day — switch between calendar and list view.</p>
+            <h1>Events</h1>
+            <p>View all upcoming events in an easy calendar format.</p>
           </header>
-
-          <!-- React mount point -->
           <div id="events-root"></div>
         </section>
-
       </div>
 
-      <!-- Footer -->
       <footer id="footer" class="px-3">
-        <section>
-          <form method="post" action="#" class="space-y-3">
-            <div class="fields grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="field">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" />
-              </div>
-              <div class="field">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" />
-              </div>
-              <div class="field sm:col-span-2">
-                <label for="message">Message</label>
-                <textarea name="message" id="message" rows="3"></textarea>
-              </div>
-            </div>
-            <ul class="actions">
-              <li><input type="submit" value="Send Message" /></li>
-            </ul>
-          </form>
-        </section>
         <section class="split contact">
           <section class="alt">
             <h3>Address</h3>
-            <p>1234 Somewhere Road #87257<br />
-            Nashville, TN 00000-0000</p>
-          </section>
-          <section>
-            <h3>Phone</h3>
-            <p><a href="#">(000) 000-0000</a></p>
-          </section>
-          <section>
-            <h3>Email</h3>
-            <p><a href="#">info@untitled.tld</a></p>
-          </section>
-          <section>
-            <h3>Social</h3>
-            <ul class="icons alt">
-              <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-              <li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-              <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-              <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-            </ul>
+            <p>1234 Somewhere Road #87257<br />Nashville, TN 00000-0000</p>
           </section>
         </section>
       </footer>
-
-      <!-- Copyright -->
-      <div id="copyright" class="px-3">
-        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
-      </div>
-
     </div>
 
-    <!-- Your site scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/jquery.scrolly.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
-
-    <!-- Events React Component (Calendar + List) -->
     <script type="text/babel">
-      const { useState, useMemo, useEffect } = React;
+      const { useState, useMemo } = React;
 
-      // EDIT THIS: your events data
       const events = [
         { id: "e1", title: "Yoga Class", date: "2025-08-28", start: "18:00", end: "19:00", location: "Studio A", description: "All levels welcome. Bring your mat!" },
         { id: "e5", title: "Open Gym", date: "2025-08-29", start: "09:00", end: "12:00", location: "Gym Floor", description: "Drop in and use our equipment." },
         { id: "e2", title: "Cooking Workshop", date: "2025-08-30", start: "17:00", end: "19:30", location: "Kitchen Lab", description: "Hands-on pasta making." },
-        { id: "e3", title: "Live Music Night", date: "2025-09-01", start: "20:00", end: "22:00", location: "Main Hall", description: "Local bands. Good vibes." },
-        { id: "e4", title: "Book Club", date: "2025-09-03", start: "15:00", end: "16:30", location: "Reading Room", description: "Discuss this month's pick." },
       ];
 
-      // Helpers
       const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
       function toDate(d) {
         const [y, m, day] = d.split("-").map(Number);
         return new Date(y, m - 1, day);
       }
-
-      function formatDateLong(isoDate) {
-        const d = toDate(isoDate);
-        return d.toLocaleDateString(undefined, {
-          weekday: "long",
-          month: "short",
-          day: "numeric",
-        });
-      }
-
       function yyyymmdd(d) {
         const y = d.getFullYear();
         const m = String(d.getMonth() + 1).padStart(2, "0");
         const day = String(d.getDate()).padStart(2, "0");
         return `${y}-${m}-${day}`;
       }
-
-      function monthLabel(d) {
-        return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      function formatDateLong(isoDate) {
+        const d = toDate(isoDate);
+        return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
       }
 
-      function addMonths(d, delta) {
-        const nd = new Date(d);
-        nd.setMonth(nd.getMonth() + delta);
-        return nd;
-      }
-
-      // Group events by date
       function useEventsByDate() {
         return useMemo(() => {
           const map = {};
@@ -198,41 +89,27 @@
             if (!map[e.date]) map[e.date] = [];
             map[e.date].push(e);
           }
-          for (const k of Object.keys(map)) {
-            map[k].sort((a, b) => (a.start + a.title).localeCompare(b.start + b.title));
-          }
           return map;
         }, []);
       }
 
-      function EventPill({ e }) {
-        // Full-width, larger text to occupy the cell; single-event-per-day optimized
+      function EventModal({ e, onClose }) {
+        if (!e) return null;
         return (
-          <div className="w-full rounded-lg px-2 py-3 ring-1 ring-gray-200 bg-gray-50 text-sm sm:text-base leading-snug break-words">
-            <div className="font-semibold">{e.title}</div>
-            <div className="text-gray-600 mt-0.5">{e.start}{e.end ? `–${e.end}` : ''}{e.location ? ` • ${e.location}` : ''}</div>
-          </div>
-        );
-      }
-
-      function ListItem({ e }) {
-        return (
-          <div className="flex items-start justify-between gap-3 bg-white rounded-xl p-4 sm:p-5 ring-1 ring-gray-200">
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold leading-tight">{e.title}</h3>
-              <p className="text-sm text-gray-600 mt-0.5">
-                {formatDateLong(e.date)} • {e.start}–{e.end}
-              </p>
-              {e.location && <p className="text-sm text-gray-600">📍 {e.location}</p>}
-              {e.description && <p className="text-sm text-gray-700 mt-2">{e.description}</p>}
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h2 className="text-xl font-bold mb-2">{e.title}</h2>
+              <p className="mb-1">{formatDateLong(e.date)} • {e.start} - {e.end}</p>
+              <p className="mb-1">📍 {e.location}</p>
+              <p className="mb-4">{e.description}</p>
+              <button onClick={onClose} className="px-4 py-2 bg-black text-white rounded">Close</button>
             </div>
           </div>
         );
       }
 
-      function Calendar({ month, onSelectEvent }) {
+      function Calendar({ month, onSelect }) {
         const eventsByDate = useEventsByDate();
-
         const first = new Date(month.getFullYear(), month.getMonth(), 1);
         const last = new Date(month.getFullYear(), month.getMonth() + 1, 0);
         const startPad = first.getDay();
@@ -245,186 +122,58 @@
 
         return (
           <div>
-            {/* Weekday header with horizontal scroll guard on tiny screens */}
-            <div className="overflow-x-auto">
-              <div className="grid grid-cols-7 text-[11px] xs:text-xs font-medium text-gray-500 mb-2 min-w-[700px]">
-                {WEEKDAYS.map((w) => (
-                  <div key={w} className="px-2 py-2 text-center" aria-hidden>
-                    {w}
+            <div className="grid grid-cols-7 text-center font-medium mb-2">
+              {WEEKDAYS.map((w) => <div key={w}>{w}</div>)}
+            </div>
+            <div className="grid grid-cols-7 gap-3">
+              {days.map((d, i) => {
+                if (!d) return <div key={i} className="h-40 md:h-48 bg-gray-100 rounded-2xl"></div>;
+                const key = yyyymmdd(d);
+                const dayEvents = eventsByDate[key] || [];
+                const e = dayEvents[0];
+                const isClickable = !!e;
+                return (
+                  <div
+                    key={i}
+                    role={isClickable ? 'button' : undefined}
+                    tabIndex={isClickable ? 0 : -1}
+                    className="h-40 md:h-48 bg-white rounded-2xl ring-1 ring-gray-200 p-3 flex flex-col items-stretch justify-start text-left focus:outline-none focus:ring-2 focus:ring-black"
+                    onClick={() => isClickable && onSelect(e)}
+                    onKeyDown={(ev) => { if (isClickable && (ev.key === 'Enter' || ev.key === ' ')) onSelect(e); }}
+                  >
+                    <div className="text-sm font-semibold text-gray-700 mb-2">{d.getDate()}</div>
+                    {e ? (
+                      <div className="flex-1">
+                        <div className="w-full rounded-lg px-3 py-3 ring-1 ring-gray-200 bg-gray-50 text-sm md:text-base leading-snug whitespace-normal break-words">
+                          <div className="font-semibold">{e.title}</div>
+                          <div className="text-gray-600 mt-0.5">{e.start}{e.end ? `–${e.end}` : ''}{e.location ? ` • ${e.location}` : ''}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex-1 flex items-center text-gray-300">No events</div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Calendar grid: allow horizontal scroll on very small screens */}
-            <div className="overflow-x-auto">
-              <div className="grid grid-cols-7 gap-2 sm:gap-3 min-w-[700px]">
-                {days.map((d, i) => {
-                  if (!d) return <div key={i} className="h-28 sm:h-40 rounded-2xl bg-transparent"></div>;
-                  const key = yyyymmdd(d);
-                  const dayEvents = eventsByDate[key] || [];
-                  const isToday = key === yyyymmdd(new Date());
-                  const event = dayEvents[0];
-                  return (
-                    <button
-                      type="button"
-                      key={i}
-                      className={`text-left h-32 xs:h-40 sm:h-48 rounded-2xl bg-white ring-1 ring-gray-200 p-3 flex flex-col gap-2 focus:outline-none focus:ring-2 focus:ring-black transition-shadow ${isToday ? "ring-2 ring-black" : ""}`}
-                      onClick={() => event && onSelectEvent(event)}
-                      aria-label={`${d.toDateString()} ${event ? `${event.title} ${event.start}${event.end ? `–${event.end}` : ''}` : 'no events'}`}
-                    >
-                      <div className="text-sm font-semibold flex items-center justify-between">
-                        <span>{d.getDate()}</span>
-                        {isToday && <span className="sr-only">Today</span>}
-                      </div>
-                      <div className="flex-1 flex items-center">
-                        {event ? (
-                          <EventPill e={event} />
-                        ) : (
-                          <span className="text-sm text-gray-300">No events</span>
-                        )}
-                      </div>
-                      {dayEvents.length > 1 && (
-                        <div className="text-xs text-gray-500">+{dayEvents.length - 1} more</div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+                );
+              })}
             </div>
           </div>
         );
       }
 
-      function Modal({ open, onClose, children, title }) {
-        if (!open) return null;
-        return (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-            <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden></div>
-            <div role="dialog" aria-modal="true" className="relative w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl p-5 ring-1 ring-gray-200 m-0 sm:m-4">
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <h4 className="text-lg font-semibold">{title}</h4>
-                <button className="px-3 py-1 text-sm rounded-lg ring-1 ring-gray-200" onClick={onClose} aria-label="Close">Close</button>
-              </div>
-              {children}
-            </div>
-          </div>
-        );
-      }
-
-      function EventsSection() {
-        const [view, setView] = useState("calendar");
-        const [month, setMonth] = useState(() => {
-          const today = new Date();
-          today.setDate(1);
-          today.setHours(0, 0, 0, 0);
-          return today;
-        });
-
-        const sorted = useMemo(() => {
-          return [...events].sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
-        }, []);
-
+      function EventsSection()() {
+        const [month, setMonth] = useState(() => { const today = new Date(); today.setDate(1); return today; });
         const [selected, setSelected] = useState(null);
 
-        // Switch to list view automatically on very small screens for usability
-        useEffect(() => {
-          const mq = window.matchMedia('(max-width: 420px)');
-          const apply = () => setView((v) => (mq.matches ? 'list' : v));
-          apply();
-          mq.addEventListener('change', apply);
-          return () => mq.removeEventListener('change', apply);
-        }, []);
-
         return (
-          <div className="w-full px-2 sm:px-0">
-            <div className="mx-auto max-w-6xl">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Upcoming Events</h2>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="px-3 py-2 text-sm rounded-lg ring-1 ring-gray-200 bg-white hidden sm:inline-block"
-                    onClick={() => setMonth(new Date())}
-                    aria-label="Jump to current month"
-                  >
-                    Today
-                  </button>
-                  <div className="inline-flex rounded-xl ring-1 ring-gray-200 overflow-hidden">
-                    <button
-                      className={`px-3 py-2 text-sm ${view === "calendar" ? "bg-black text-white" : "bg-white"}`}
-                      onClick={() => setView("calendar")}
-                      aria-pressed={view === "calendar"}
-                    >
-                      Calendar
-                    </button>
-                    <button
-                      className={`px-3 py-2 text-sm ${view === "list" ? "bg-black text-white" : "bg-white"}`}
-                      onClick={() => setView("list")}
-                      aria-pressed={view === "list"}
-                    >
-                      List
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {view === "calendar" ? (
-                <section className="bg-white rounded-2xl p-3 sm:p-4 ring-1 ring-gray-200">
-                  <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 mb-3 sm:mb-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="px-3 py-2 text-sm rounded-lg ring-1 ring-gray-200 bg-white"
-                        onClick={() => setMonth((m) => addMonths(m, -1))}
-                        aria-label="Previous month"
-                      >
-                        ◀︎ Prev
-                      </button>
-                      <button
-                        className="px-3 py-2 text-sm rounded-lg ring-1 ring-gray-200 bg-white sm:hidden"
-                        onClick={() => setMonth(new Date())}
-                        aria-label="Jump to current month"
-                      >
-                        Today
-                      </button>
-                      <button
-                        className="px-3 py-2 text-sm rounded-lg ring-1 ring-gray-200 bg-white"
-                        onClick={() => setMonth((m) => addMonths(m, +1))}
-                        aria-label="Next month"
-                      >
-                        Next ▶︎
-                      </button>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-center xs:text-right">{monthLabel(month)}</h3>
-                  </div>
-                  <Calendar month={month} onSelectEvent={setSelected} />
-                </section>
-              ) : (
-                <section className="space-y-3">
-                  {sorted.map((e) => (
-                    <ListItem key={e.id} e={e} />
-                  ))}
-                </section>
-              )}
-
-              <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.title}>
-                {selected && (
-                  <div className="text-sm space-y-2">
-                    <p className="text-gray-700"><strong>Date:</strong> {formatDateLong(selected.date)}</p>
-                    <p className="text-gray-700"><strong>Time:</strong> {selected.start}{selected.end ? `–${selected.end}` : ''}</p>
-                    {selected.location && (
-                      <p className="text-gray-700"><strong>Location:</strong> {selected.location}</p>
-                    )}
-                    {selected.description && (
-                      <p className="text-gray-700"><strong>About:</strong> {selected.description}</p>
-                    )}
-                  </div>
-                )}
-              </Modal>
-
-              <div className="mt-6 sm:mt-8 text-xs text-gray-500">
-                ✍️ To add events, edit the <code>events</code> array in this file (YYYY-MM-DD dates, 24h times).
-              </div>
+          <div className="max-w-6xl mx-auto p-4">
+            <h2 className="text-3xl font-bold mb-4">Upcoming Events</h2>
+            <div className="flex justify-between mb-4">
+              <button onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth()-1, 1))} className="px-4 py-2 bg-gray-200 rounded">Prev</button>
+              <h3 className="text-xl font-semibold">{month.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</h3>
+              <button onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth()+1, 1))} className="px-4 py-2 bg-gray-200 rounded">Next</button>
             </div>
+            <Calendar month={month} onSelect={setSelected} />
+            <EventModal e={selected} onClose={() => setSelected(null)} />
           </div>
         );
       }
@@ -434,3 +183,4 @@
     </script>
   </body>
 </html>
+
