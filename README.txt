@@ -1,4 +1,4 @@
-Changed for the HSV-Karlshof by the Members (Nils and Beyza)
+Changed for the HSV-Karlshof by the HSV-speaker (Beyza)
 
 Massively by HTML5 UP
 html5up.net | @ajlkn
@@ -33,3 +33,4 @@ Credits:
 		Scrollex (github.com/ajlkn/jquery.scrollex)
 
 		Responsive Tools (github.com/ajlkn/responsive-tools)
+
